@@ -142,6 +142,6 @@ module.exports = {
 "start": "webpack serve --open",
 
 -- O ejecutarlo con (automaticamente abre la página en el navegador):
-npx webpack serve --open
+$ npx webpack serve --open
 
 -- Warning: webpack-dev-server doesn't write any output files after compiling. Instead, it keeps bundle files in memory and serves them as if they were real files mounted at the server's root path.
