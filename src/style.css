@@ -1,3 +1,18 @@
 html {
 	background-color: olive;
+	font-size: 1.5rem;
+}
+
+nav {
+	margin: 2rem;
+	border-radius: 1rem;
+	box-shadow: 0 0 1rem blue;
+	background-color: darkslategray;
+}
+
+main {
+	margin: 2rem;
+	border-radius: 1rem;
+	box-shadow: 0 0 1rem blue;
+	background-color: darkslategray;
 }
