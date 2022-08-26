@@ -1,8 +1,4 @@
-function dropDown(
-  parentsClass,
-  size,
-  objMenu
-) {
+function dropDown(parentsClass, size, objMenu) {
   function revealMenu(event) {
     if (event.target.children[0].style.height === "0px") {
       event.target.childNodes[0].data = `\u{25B5}  ${objMenu["Name"]}`;
@@ -16,10 +12,10 @@ function dropDown(
   const parent = document.getElementsByClassName(parentsClass)[0];
   parent.style.height = `${2.2 * size}rem`;
   const menuContainer = document.createElement("div");
-	menuContainer.addEventListener("click", revealMenu);
-	menuContainer.style.display = "inline-flex";
-	menuContainer.style.flexDirection = "column";
-	menuContainer.style.alignItems = "center";
+  menuContainer.addEventListener("click", revealMenu);
+  menuContainer.style.display = "inline-flex";
+  menuContainer.style.flexDirection = "column";
+  menuContainer.style.alignItems = "center";
   menuContainer.style.fontSize = `${size}rem`;
   menuContainer.style.margin = `${size / 2}rem`;
   menuContainer.style.color = "white";
@@ -29,29 +25,48 @@ function dropDown(
   const items = document.createElement("div");
   items.style.display = "flex";
   items.style.flexDirection = "column";
-  items.style.overflow = "hidden";
-  items.style.height = "0px";
-  items.style.transition = "height 1s";
+	items.style.borderStyle = "solid";
+	items.style.borderRadius = `${size / 4}rem`;
+  items.style.borderWidth = `${size / 15}rem`;
+  items.style.padding = "1rem";
+  items.style.backgroundColor = "black";
 
   for (const item of Object.keys(objMenu)) {
-		if (item !== "Name") {
-		const itemA = document.createElement("a");
-    itemA.textContent = item;
-    itemA.href = objMenu[item];
-    itemA.style.textDecoration = "none";
-    itemA.style.color = "lightgrey";
-    itemA.style.cursor = "pointer";
-		items.appendChild(itemA);
-		};
+    if (item !== "Name") {
+      const itemA = document.createElement("a");
+      itemA.textContent = item;
+      itemA.href = objMenu[item];
+      itemA.style.textDecoration = "none";
+      itemA.style.color = "#999999";
+      itemA.style.cursor = "pointer";
+      itemA.addEventListener("mouseenter", (event) => {
+        event.target.style.color = "white";
+			});
+			itemA.addEventListener("mouseout", (event) => {
+        event.target.style.color = "#999999";
+			});
+      items.appendChild(itemA);
+    }
   }
 
-  menuContainer.appendChild(items);
+  // Este itemsWrapper se necesita para q height:0 haga desaparecer todo el div,
+  // sin él aparecería el padding y el border (inclusive si se usa box-sizing: border-box).
+
+  const itemsWrapper = document.createElement("div");
+  itemsWrapper.style.position = "relative";
+  itemsWrapper.style.top = `${size}rem`;
+  itemsWrapper.style.overflow = "hidden";
+  itemsWrapper.style.height = "0px";
+  itemsWrapper.style.transition = "height 1s";
+
+  itemsWrapper.appendChild(items);
+  menuContainer.appendChild(itemsWrapper);
   parent.appendChild(menuContainer);
 }
 
 function tabsAndMores(parentsClass, menuContainerClass, size, ...tabsOrMores) {
-	const parent = document.getElementsByClassName(parentsClass)[0];
-	parent.style.height = `${2.2 * size}rem`;
+  const parent = document.getElementsByClassName(parentsClass)[0];
+  parent.style.height = `${2.2 * size}rem`;
   const menuContainer = document.createElement("div");
   menuContainer.classList.add(menuContainerClass);
   parent.appendChild(menuContainer);
@@ -63,18 +78,14 @@ function tabsAndMores(parentsClass, menuContainerClass, size, ...tabsOrMores) {
         itemA.classList.add(`${menuContainerClass}Item`);
         itemA.textContent = element[0];
         itemA.href = element[1];
-				itemA.style.textDecoration = "none";
-				itemA.style.fontSize = `${size}rem`;
-				itemA.style.margin = `${size / 2}rem`;
+        itemA.style.textDecoration = "none";
+        itemA.style.fontSize = `${size}rem`;
+        itemA.style.margin = `${size / 2}rem`;
         itemA.style.color = "white";
         itemA.style.cursor = "pointer";
         menuContainer.appendChild(itemA);
       } else {
-        dropDown(
-          menuContainerClass,
-          size,
-          element
-        );
+        dropDown(menuContainerClass, size, element);
       }
     } else {
       console.log(`Wrong typeof ${element}, index: ${index}`);
