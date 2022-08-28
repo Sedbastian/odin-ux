@@ -25,8 +25,8 @@ function dropDown(parentsClass, size, objMenu) {
   const items = document.createElement("div");
   items.style.display = "flex";
   items.style.flexDirection = "column";
-	items.style.borderStyle = "solid";
-	items.style.borderRadius = `${size / 4}rem`;
+  items.style.borderStyle = "solid";
+  items.style.borderRadius = `${size / 4}rem`;
   items.style.borderWidth = `${size / 15}rem`;
   items.style.padding = "1rem";
   items.style.backgroundColor = "black";
@@ -41,10 +41,10 @@ function dropDown(parentsClass, size, objMenu) {
       itemA.style.cursor = "pointer";
       itemA.addEventListener("mouseenter", (event) => {
         event.target.style.color = "white";
-			});
-			itemA.addEventListener("mouseout", (event) => {
+      });
+      itemA.addEventListener("mouseout", (event) => {
         event.target.style.color = "#999999";
-			});
+      });
       items.appendChild(itemA);
     }
   }
@@ -93,4 +93,158 @@ function tabsAndMores(parentsClass, menuContainerClass, size, ...tabsOrMores) {
   });
 }
 
-export { dropDown, tabsAndMores };
+function imageSlider(parentsClass, pictureFramePxWidth, ...imagesFiles) {
+  let imageShowingIndex = 0;
+
+  function translateLeft() {
+    if (imageShowingIndex === 0) {
+      return;
+    }
+
+    const imageShowing = document.querySelector(
+      `[data-imagenumber="${imageShowingIndex}"]`
+    );
+    const imageToShow = document.querySelector(
+      `[data-imagenumber="${imageShowingIndex - 1}"]`
+    );
+
+    const translateImagesDivPx = parseInt(
+      imageShowing.width / 2 + imageToShow.width / 2
+    );
+    // Se hace el slice para q funcione el parseInt
+    const alreadyTranslatedPx = parseInt(imagesDiv.style.transform.slice(10));
+
+    imagesDiv.style.transform = `translate(${
+      alreadyTranslatedPx + translateImagesDivPx + 2 * singleImagePxMargin
+    }px)`;
+
+    imageShowingIndex -= 1;
+  }
+
+  function translateRight() {
+    if (imageShowingIndex === imagesFiles.length - 1) {
+      return;
+    }
+
+    const imageShowing = document.querySelector(
+      `[data-imagenumber="${imageShowingIndex}"]`
+    );
+    const imageToShow = document.querySelector(
+      `[data-imagenumber="${imageShowingIndex + 1}"]`
+    );
+
+    const translateImagesDivPx = parseInt(
+      imageShowing.width / 2 + imageToShow.width / 2
+    );
+    // Se hace el slice para q funcione el parseInt
+    const alreadyTranslatedPx = parseInt(imagesDiv.style.transform.slice(10));
+
+    imagesDiv.style.transform = `translate(${
+      alreadyTranslatedPx - translateImagesDivPx - 2 * singleImagePxMargin
+    }px)`;
+
+    imageShowingIndex += 1;
+  }
+
+  function translateToDot(event) {
+    const moveNimages = event.target.dataset.dotnumber - imageShowingIndex;
+    if (moveNimages > 0) {
+      for (let i = 0; i < moveNimages; i++) {
+        translateRight();
+      }
+		}
+		if (moveNimages < 0) {
+      for (let i = 0; i > moveNimages; i--) {
+        translateLeft();
+      }
+		}
+  }
+
+  const pictureFrameArrowsAndDotsContainer = document.createElement("div");
+  pictureFrameArrowsAndDotsContainer.style.display = "flex";
+  pictureFrameArrowsAndDotsContainer.style.flexDirection = "column";
+  pictureFrameArrowsAndDotsContainer.style.alignItems = "center";
+
+  const pictureFrameAndArrowsContainer = document.createElement("div");
+  pictureFrameAndArrowsContainer.style.display = "flex";
+  pictureFrameAndArrowsContainer.style.alignItems = "center";
+
+  const divArrowLeft = document.createElement("div");
+  divArrowLeft.textContent = "\u{25C0}";
+  divArrowLeft.style.padding = "0.5rem";
+  divArrowLeft.style.cursor = "pointer";
+  divArrowLeft.addEventListener("click", translateLeft);
+  pictureFrameAndArrowsContainer.appendChild(divArrowLeft);
+
+  const pictureFrame = document.createElement("div");
+  pictureFrameAndArrowsContainer.appendChild(pictureFrame);
+  pictureFrame.style.width = `${pictureFramePxWidth}px`;
+  pictureFrame.style.overflow = "hidden";
+  pictureFrame.style.borderStyle = "solid";
+  pictureFrame.style.display = "flex";
+
+  const divArrowRight = document.createElement("div");
+  divArrowRight.textContent = "\u{25B6}";
+  divArrowRight.style.padding = "0.5rem";
+  divArrowRight.style.cursor = "pointer";
+  divArrowRight.addEventListener("click", translateRight);
+  pictureFrameAndArrowsContainer.appendChild(divArrowRight);
+
+  const imagesDiv = document.createElement("div");
+  imagesDiv.style.display = "flex";
+  imagesDiv.style.height = "50vh";
+  imagesDiv.style.transition = "transform 1s";
+
+  const dots = document.createElement("div");
+  dots.style.display = "flex";
+
+  const singleImagePxMargin = 20;
+
+  imagesFiles.forEach((image, index) => {
+    const singleImage = document.createElement("img");
+    singleImage.classList.add("imageUxLifri");
+    singleImage.src = image;
+    singleImage.dataset.imagenumber = `${index}`;
+    singleImage.style.margin = `${singleImagePxMargin}px`;
+    if (index === 0) {
+      singleImage.classList.add("showing");
+    }
+    imagesDiv.appendChild(singleImage);
+
+    const dot = document.createElement("div");
+    dot.dataset.dotnumber = `${index}`;
+    if (index === 0) {
+      dot.textContent = "\u{25C8}";
+    } else {
+      dot.textContent = "\u{25C7}";
+    }
+    dot.style.cursor = "pointer";
+    dot.addEventListener("click", translateToDot);
+    dots.appendChild(dot);
+  });
+
+  pictureFrame.appendChild(imagesDiv);
+
+  pictureFrameArrowsAndDotsContainer.appendChild(
+    pictureFrameAndArrowsContainer
+  );
+  pictureFrameArrowsAndDotsContainer.appendChild(dots);
+
+  parent = document.querySelector(`.${parentsClass}`);
+  parent.appendChild(pictureFrameArrowsAndDotsContainer);
+
+  window.addEventListener("load", () => {
+    const firstImage = document.querySelector('[data-imagenumber="0"]');
+    imagesDiv.style.transform = `translate(${
+      pictureFramePxWidth / 2 - singleImagePxMargin - firstImage.width / 2
+    }px)`;
+  });
+
+  // const imagesToAddData = document.querySelectorAll(".imageUxLifri");
+  // imagesToAddData.forEach((image) => {
+  // 	console.log(image.scrollWidth);
+  // 	image.setAttribute("data-xoffset", `${image.clientWidth}`);;
+  // });
+}
+
+export { dropDown, tabsAndMores, imageSlider };

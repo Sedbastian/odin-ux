@@ -6,13 +6,11 @@ html {
 nav {
 	margin: 2rem;
 	border-radius: 1rem;
-	box-shadow: 0 0 1rem blue;
-	background-color: darkslategray;
+	background-color: #444444;
 }
 
 main {
 	margin: 2rem;
 	border-radius: 1rem;
-	box-shadow: 0 0 1rem blue;
-	background-color: darkslategray;
+	background-color: #333333;
 }

@@ -1,5 +1,11 @@
 import "./style.css";
-import { dropDown, tabsAndMores } from "./uxLifri.js";
+import { dropDown, tabsAndMores, imageSlider} from "./uxLifri.js";
+import joyo from "./joyo.jpg";
+import osho25 from "./osho25.jpg";
+import osho26 from "./osho26.jpg";
+import osho27 from "./osho27.jpg";
+import osho28 from "./osho28.jpg";
+import osho29 from "./osho29.jpg";
 
 const menuPrimero = {
 	Name: "Menu",
@@ -27,3 +33,5 @@ tabsAndMores(
   ["Selassie", "1"],
   { Name: "Haile I", Conjio: "Merdel", Buman: "Bemnepr" }
 );
+
+imageSlider("main", 400, joyo, osho25, osho26, osho27, osho28, osho29);
