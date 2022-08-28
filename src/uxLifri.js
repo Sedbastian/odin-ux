@@ -124,12 +124,14 @@ function imageSlider(parentsClass, pictureFramePxWidth, ...imagesFiles) {
       alreadyTranslatedPx + translateImagesDivPx + 2 * singleImagePxMargin
     }px)`;
 
-    imageShowingIndex -= 1;
+		imageShowingIndex -= 1;
+		set5sInterval();
   }
 
   function translateRight() {
     if (imageShowingIndex === imagesFiles.length - 1) {
-      return;
+			translateToDot(0);
+			return;
     }
 
 		const dotToUnMark = document.querySelector(`[data-dotnumber="${imageShowingIndex}"]`);
@@ -156,14 +158,15 @@ function imageSlider(parentsClass, pictureFramePxWidth, ...imagesFiles) {
     }px)`;
 
 		imageShowingIndex += 1;
+		set5sInterval();
   }
 
-  function translateToDot(event) {
-    const moveNimages = event.target.dataset.dotnumber - imageShowingIndex;
+  function translateToDot(dotNumber) {
+    const moveNimages = dotNumber - imageShowingIndex;
     if (moveNimages > 0) {
     const previousDot = document.querySelector(`[data-dotnumber="${imageShowingIndex}"]`);
 		previousDot.textContent = "\u{25C7}";
-		const nextDot = document.querySelector(`[data-dotnumber="${event.target.dataset.dotnumber}"]`);
+		const nextDot = document.querySelector(`[data-dotnumber="${dotNumber}"]`);
 		nextDot.textContent = "\u{25C8}";
 		for (let i = 0; i < moveNimages; i++) {
         translateRight();
@@ -172,20 +175,28 @@ function imageSlider(parentsClass, pictureFramePxWidth, ...imagesFiles) {
     if (moveNimages < 0) {
 			const previousDot = document.querySelector(`[data-dotnumber="${imageShowingIndex}"]`);
 			previousDot.textContent = "\u{25C7}";
-			const nextDot = document.querySelector(`[data-dotnumber="${event.target.dataset.dotnumber}"]`);
+			const nextDot = document.querySelector(`[data-dotnumber="${dotNumber}"]`);
 			nextDot.textContent = "\u{25C8}";
       for (let i = 0; i > moveNimages; i--) {
         translateLeft();
       }
 		}
 		
-		imageShowingIndex = parseInt(event.target.dataset.dotnumber);
+		imageShowingIndex = parseInt(dotNumber);
+		set5sInterval();
 	}
 
-  const pictureFrameArrowsAndDotsContainer = document.createElement("div");
-  pictureFrameArrowsAndDotsContainer.style.display = "flex";
-  pictureFrameArrowsAndDotsContainer.style.flexDirection = "column";
-  pictureFrameArrowsAndDotsContainer.style.alignItems = "center";
+	let intervalID;
+	function set5sInterval() {
+		clearInterval(intervalID);
+		intervalID = setInterval(translateRight, 5000);
+	}
+
+  const imageSliderDiv = document.createElement("div");
+  imageSliderDiv.style.display = "flex";
+  imageSliderDiv.style.flexDirection = "column";
+	imageSliderDiv.style.alignItems = "center";
+	imageSliderDiv.style.margin = "1rem";
 
   const pictureFrameAndArrowsContainer = document.createElement("div");
   pictureFrameAndArrowsContainer.style.display = "flex";
@@ -242,19 +253,21 @@ function imageSlider(parentsClass, pictureFramePxWidth, ...imagesFiles) {
     }
     dot.style.fontSize = "1.5rem";
     dot.style.cursor = "pointer";
-    dot.addEventListener("click", translateToDot);
+    dot.addEventListener("click", (event) => {
+			translateToDot(event.target.dataset.dotnumber);
+		});
     dots.appendChild(dot);
   });
 
   pictureFrame.appendChild(imagesDiv);
 
-  pictureFrameArrowsAndDotsContainer.appendChild(
+  imageSliderDiv.appendChild(
     pictureFrameAndArrowsContainer
   );
-  pictureFrameArrowsAndDotsContainer.appendChild(dots);
+  imageSliderDiv.appendChild(dots);
 
   parent = document.querySelector(`.${parentsClass}`);
-  parent.appendChild(pictureFrameArrowsAndDotsContainer);
+  parent.appendChild(imageSliderDiv);
 
   window.addEventListener("load", () => {
     const firstImage = document.querySelector('[data-imagenumber="0"]');
@@ -263,11 +276,7 @@ function imageSlider(parentsClass, pictureFramePxWidth, ...imagesFiles) {
     }px)`;
   });
 
-  // const imagesToAddData = document.querySelectorAll(".imageUxLifri");
-  // imagesToAddData.forEach((image) => {
-  // 	console.log(image.scrollWidth);
-  // 	image.setAttribute("data-xoffset", `${image.clientWidth}`);;
-  // });
+  set5sInterval();
 }
 
 export { dropDown, tabsAndMores, imageSlider };
