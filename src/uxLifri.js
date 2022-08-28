@@ -101,6 +101,12 @@ function imageSlider(parentsClass, pictureFramePxWidth, ...imagesFiles) {
       return;
     }
 
+		const dotToUnMark = document.querySelector(`[data-dotnumber="${imageShowingIndex}"]`);
+		dotToUnMark.textContent = "\u{25C7}";
+
+		const dotToMark = document.querySelector(`[data-dotnumber="${imageShowingIndex - 1}"]`);
+		dotToMark.textContent = "\u{25C8}";
+
     const imageShowing = document.querySelector(
       `[data-imagenumber="${imageShowingIndex}"]`
     );
@@ -126,6 +132,12 @@ function imageSlider(parentsClass, pictureFramePxWidth, ...imagesFiles) {
       return;
     }
 
+		const dotToUnMark = document.querySelector(`[data-dotnumber="${imageShowingIndex}"]`);
+		dotToUnMark.textContent = "\u{25C7}";
+
+		const dotToMark = document.querySelector(`[data-dotnumber="${imageShowingIndex + 1}"]`);
+		dotToMark.textContent = "\u{25C8}";
+		
     const imageShowing = document.querySelector(
       `[data-imagenumber="${imageShowingIndex}"]`
     );
@@ -143,22 +155,32 @@ function imageSlider(parentsClass, pictureFramePxWidth, ...imagesFiles) {
       alreadyTranslatedPx - translateImagesDivPx - 2 * singleImagePxMargin
     }px)`;
 
-    imageShowingIndex += 1;
+		imageShowingIndex += 1;
   }
 
   function translateToDot(event) {
     const moveNimages = event.target.dataset.dotnumber - imageShowingIndex;
     if (moveNimages > 0) {
-      for (let i = 0; i < moveNimages; i++) {
+    const previousDot = document.querySelector(`[data-dotnumber="${imageShowingIndex}"]`);
+		previousDot.textContent = "\u{25C7}";
+		const nextDot = document.querySelector(`[data-dotnumber="${event.target.dataset.dotnumber}"]`);
+		nextDot.textContent = "\u{25C8}";
+		for (let i = 0; i < moveNimages; i++) {
         translateRight();
       }
-		}
-		if (moveNimages < 0) {
+    }
+    if (moveNimages < 0) {
+			const previousDot = document.querySelector(`[data-dotnumber="${imageShowingIndex}"]`);
+			previousDot.textContent = "\u{25C7}";
+			const nextDot = document.querySelector(`[data-dotnumber="${event.target.dataset.dotnumber}"]`);
+			nextDot.textContent = "\u{25C8}";
       for (let i = 0; i > moveNimages; i--) {
         translateLeft();
       }
 		}
-  }
+		
+		imageShowingIndex = parseInt(event.target.dataset.dotnumber);
+	}
 
   const pictureFrameArrowsAndDotsContainer = document.createElement("div");
   pictureFrameArrowsAndDotsContainer.style.display = "flex";
@@ -218,6 +240,7 @@ function imageSlider(parentsClass, pictureFramePxWidth, ...imagesFiles) {
     } else {
       dot.textContent = "\u{25C7}";
     }
+    dot.style.fontSize = "1.5rem";
     dot.style.cursor = "pointer";
     dot.addEventListener("click", translateToDot);
     dots.appendChild(dot);
